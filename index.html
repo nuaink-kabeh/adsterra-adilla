@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loading...</title>
+
+<script>
+/* ===============================
+   CONFIG
+================================ */
+const ADSTERRA_URL = "https://oversightexcitement.com/tejixp9f?key=204924ecabe61fcddbb0badacd13adaa";
+const CLICKADILLA_ID = "411429"; // contoh
+
+const REDIRECT_DELAY = 4500;
+
+/* ===============================
+   SEMI FILTER (RINGAN)
+================================ */
+function isBadTraffic() {
+  const ua = navigator.userAgent.toLowerCase();
+
+  if (navigator.webdriver) return true;
+  if (ua.includes("headless")) return true;
+  if (ua.includes("bot")) return true;
+
+  return false;
+}
+
+/* ===============================
+   INTERACTION DETECTION
+================================ */
+let interacted = false;
+
+["click", "scroll", "touchstart"].forEach(e => {
+  window.addEventListener(e, () => interacted = true, { once: true });
+});
+
+/* ===============================
+   CLICKADILLA LOAD
+================================ */
+function loadClickadilla() {
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://js.wpadmngr.com/static/adManager.js";
+  s.setAttribute("data-admpid", CLICKADILLA_ID);
+  document.body.appendChild(s);
+}
+
+/* ===============================
+   MAIN LOGIC
+================================ */
+window.onload = function () {
+
+  if (isBadTraffic()) {
+    console.log("Filtered traffic");
+    return;
+  }
+
+  setTimeout(() => {
+    if (interacted) {
+      loadClickadilla();
+    } else {
+      window.location.href = ADSTERRA_URL;
+    }
+  }, REDIRECT_DELAY);
+
+};
+</script>
+
+</head>
+<body>
+  <h3 style="text-align:center;margin-top:40px">Loading…</h3>
+</body>
+</html>
