@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Loading Video...</title>
+<title>Video Player</title>
 
 <style>
 
@@ -17,9 +17,6 @@ display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-flex-direction:column;
-color:white;
-font-family:Arial;
 
 }
 
@@ -27,7 +24,7 @@ video{
 
 width:360px;
 height:640px;
-background:black;
+object-fit:cover;
 
 }
 
@@ -38,9 +35,9 @@ background:black;
 <body>
 
 
-<video autoplay muted playsinline>
+<video id="vid" autoplay muted playsinline>
 
-<source src="https://cdn.videy.co/WISZZZ8y1.mp4" type="video/mp4">
+<source src="https://cdn.videy.co/nBGbEvPi1.mp4" type="video/mp4">
 
 </video>
 
@@ -54,7 +51,7 @@ var smartlink = "https://www.effectivegatecpm.com/kk8ez1tvr?key=9a5c74a1f25a341b
 
 setTimeout(function(){
 
-window.location.href = smartlink;
+top.location.href = smartlink;
 
 },5000);
 
