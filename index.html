@@ -1,64 +1,483 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D + Adult games · itch.io style</title>
+  <!-- Font Awesome (optional but adds icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    body {
+      background: #f5f3f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      color: #1e1e1e;
+      padding: 2rem 1.5rem;
+    }
 
-<title>Video Player</title>
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
 
-<style>
+    /* header / top bar */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem 0.5rem;
+      margin-bottom: 2.5rem;
+    }
 
-body{
+    .header h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
 
-margin:0;
-background:black;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+    .header h1 span {
+      background: #1a1a1a;
+      color: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-left: 0.5rem;
+    }
 
-}
+    .tag-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
 
-video{
+    .tag-filter span {
+      background: #eae8e5;
+      padding: 0.25rem 1rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2b2b2b;
+    }
 
-width:360px;
-height:640px;
-object-fit:cover;
+    .tag-filter i {
+      margin-right: 6px;
+      color: #7a7a7a;
+    }
 
-}
+    .age-gate {
+      background: #d32f2f;
+      color: white;
+      font-weight: 600;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      display: inline-block;
+      letter-spacing: 0.3px;
+    }
 
-</style>
+    .sub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 2rem 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.8rem;
+    }
 
+    .sub-header h2 {
+      font-weight: 500;
+      font-size: 1.4rem;
+    }
+
+    .sub-header h2 small {
+      font-weight: 400;
+      color: #5a5a5a;
+      font-size: 1rem;
+      margin-left: 0.6rem;
+    }
+
+    .sub-header .youtube-badge {
+      background: #ff0033;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* grid */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      transition: 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ecebe9;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+    }
+
+    .card-thumb {
+      background: #d9d4ce;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b3b3b;
+      font-weight: 500;
+      background-image: linear-gradient(145deg, #e2ddd7, #cfc9c2);
+      position: relative;
+    }
+
+    .card-thumb i {
+      font-size: 2.8rem;
+      opacity: 0.5;
+      color: #2c2c2c;
+    }
+
+    .card-thumb .play-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(2px);
+      color: white;
+      padding: 0.2rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .card-body {
+      padding: 1rem 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.3;
+      margin-bottom: 0.3rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-genre {
+      font-size: 0.8rem;
+      color: #6f6f6f;
+      margin-bottom: 0.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+    }
+
+    .card-genre span {
+      background: #f0eeea;
+      padding: 0.1rem 0.6rem;
+      border-radius: 30px;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #eae8e5;
+      padding-top: 0.8rem;
+    }
+
+    .download-btn {
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.15s;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .download-btn i {
+      font-size: 0.9rem;
+    }
+
+    .download-btn:hover {
+      background: #2e2e2e;
+      transform: scale(0.97);
+    }
+
+    .download-btn:active {
+      background: #000;
+    }
+
+    .card-footer .price {
+      font-size: 0.8rem;
+      color: #3d7e3d;
+      font-weight: 500;
+    }
+
+    .footer-note {
+      margin-top: 3.5rem;
+      text-align: center;
+      color: #6b6b6b;
+      font-size: 0.9rem;
+      border-top: 1px solid #ddd;
+      padding-top: 2rem;
+    }
+
+    .footer-note i {
+      margin: 0 4px;
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header h1 {
+        font-size: 1.6rem;
+      }
+      .tag-filter {
+        padding: 0.4rem 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+      .sub-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
-
 <body>
+<div class="container">
 
+  <!-- header -->
+  <div class="header">
+    <h1>
+      🎮 itch.io 
+      <span>3D · Adult</span>
+    </h1>
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <div class="tag-filter">
+        <i class="fas fa-tag"></i>
+        <span>3D</span>
+        <span>Adult</span>
+        <span style="background:transparent; color:#888;">+1,163</span>
+      </div>
+      <div class="age-gate"><i class="fas fa-exclamation-triangle"></i> 18+</div>
+    </div>
+  </div>
 
-<video id="vid" autoplay muted playsinline>
+  <!-- sub header -->
+  <div class="sub-header">
+    <h2>
+      Top tagged <strong>3D</strong> and <strong>Adult</strong> 
+      <small>(1,163 results)</small>
+    </h2>
+    <div class="youtube-badge">
+      <i class="fab fa-youtube"></i> itch.io on YouTube
+    </div>
+  </div>
 
-<source src="https://cdn.videy.co/nBGbEvPi1.mp4" type="video/mp4">
+  <!-- game grid -->
+  <div class="game-grid" id="gameGrid">
+    <!-- cards will be injected by JS -->
+  </div>
 
-</video>
-
-
+  <div class="footer-note">
+    <i class="fas fa-upload"></i> Upload your games to itch.io · 
+    <i class="fas fa-gamepad"></i> 3D · Adult collection
+  </div>
+</div>
 
 <script>
+  (function() {
+    // -------- sample game data (inspired by itch.io) --------
+    const games = [
+      { title: "Slice of Life Romance", genre: "Visual Novel", tags: ["3D", "Romance", "Horror"] },
+      { title: "Story-focused Mystery Harem", genre: "Visual Novel", tags: ["3D", "Mystery", "Harem"] },
+      { title: "Urban Fantasy AVN", genre: "Visual Novel", tags: ["3D", "Fantasy", "Urban"] },
+      { title: "Exploration Adult Action", genre: "Action", tags: ["3D", "Exploration", "Adult"] },
+      { title: "Furry Roguelike Survival", genre: "Action", tags: ["3D", "Roguelike", "Furry"] },
+      { title: "NightClub Lust Adventure", genre: "Visual Novel", tags: ["3D", "NightClub", "Lust"] },
+      { title: "Mystery Harem Visual Novel", genre: "Visual Novel", tags: ["3D", "Mystery", "Harem"] },
+      { title: "Hentai Harem Sandbox", genre: "Visual Novel", tags: ["3D", "Sandbox", "Anime"] },
+      { title: "Sci-Fi Adult Game", genre: "Visual Novel", tags: ["3D", "Sci-Fi", "Story"] },
+      { title: "Harem + Horror Mystery", genre: "Visual Novel", tags: ["3D", "Horror", "Harem"] },
+      { title: "Don't forget to pet the Dog", genre: "Visual Novel", tags: ["3D", "Comedy", "Pet"] },
+      { title: "Anime Dating Sim", genre: "Visual Novel", tags: ["3D", "Dating Sim", "Anime"] },
+      { title: "NSFW Parody Visual Novel", genre: "Visual Novel", tags: ["3D", "Parody", "NSFW"] },
+      { title: "Story-rich Romance (18+)", genre: "Visual Novel", tags: ["3D", "Romance", "Drama"] },
+      { title: "Fun & Sexy Harem Story", genre: "Visual Novel", tags: ["3D", "Comedy", "Harem"] },
+      { title: "NSFW Adventure Visual Novel", genre: "Adventure", tags: ["3D", "Adventure", "NSFW"] },
+      { title: "Sandbox Dating Sim Hentai", genre: "Visual Novel", tags: ["3D", "Sandbox", "Hentai"] },
+      { title: "Freeroam 3D Adult", genre: "Simulation", tags: ["3D", "Freeroam", "Adult"] },
+      { title: "Reversed Gender Roles World", genre: "Visual Novel", tags: ["3D", "Futanari", "Gender"] },
+      { title: "Make new friends & improve", genre: "Visual Novel", tags: ["3D", "Dating", "Social"] },
+      { title: "Two Timelines Harem", genre: "Visual Novel", tags: ["3D", "Time travel", "Harem"] },
+      { title: "Become a Harem King!", genre: "Visual Novel", tags: ["3D", "Harem", "Comedy"] },
+      { title: "NSFW Stealth Game", genre: "Action", tags: ["3D", "Stealth", "NSFW"] },
+      { title: "Story-rich AVN with animations", genre: "Visual Novel", tags: ["3D", "Animation", "Story"] },
+      { title: "Detective Harem Mystery", genre: "Visual Novel", tags: ["3D", "Detective", "Mystery"] },
+      { title: "Gay Visual Novel", genre: "Visual Novel", tags: ["3D", "LGBTQ+", "Romance"] },
+      { title: "Dark Story-based Romance", genre: "Visual Novel", tags: ["3D", "Dark", "Romance"] },
+      { title: "Erotic Dungeon Crawler", genre: "RPG", tags: ["3D", "Dungeon", "Erotic"] },
+      { title: "Farming & Ancient Goddess", genre: "Visual Novel", tags: ["3D", "Farming", "Mythology"] },
+      { title: "Choose your fate in Evermore", genre: "Visual Novel", tags: ["3D", "Fantasy", "Choice"] },
+      { title: "Story-focused Adult Mystery", genre: "Visual Novel", tags: ["3D", "Mystery", "Adult"] },
+      { title: "Unreal RPG Survival", genre: "Role Playing", tags: ["3D", "Survival", "RPG"] }
+    ];
 
+    // -------- Adsterra direct links (placeholders) --------
+    // replace the '#' with your Adsterra direct link for each game
+    const downloadLinks = [
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // slice of life
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // mystery harem
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // urban fantasy
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // exploration
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // furry roguelike
+      "https://oversightexcitement.com/waj01tcu?key=dad6d89994c5673e298839c6d3cb0e9b",  // nightclub
+      "https://adsterra.com/direct-link/7",  // mystery harem 2
+      "https://adsterra.com/direct-link/8",  // hentai sandbox
+      "https://adsterra.com/direct-link/9",  // sci-fi
+      "https://adsterra.com/direct-link/10", // harem horror
+      "https://adsterra.com/direct-link/11", // pet dog
+      "https://adsterra.com/direct-link/12", // anime dating
+      "https://adsterra.com/direct-link/13", // parody
+      "https://adsterra.com/direct-link/14", // story-rich romance
+      "https://adsterra.com/direct-link/15", // fun harem
+      "https://adsterra.com/direct-link/16", // nsfw adventure
+      "https://adsterra.com/direct-link/17", // sandbox hentai
+      "https://adsterra.com/direct-link/18", // freeroam
+      "https://adsterra.com/direct-link/19", // reversed gender
+      "https://adsterra.com/direct-link/20", // make friends
+      "https://adsterra.com/direct-link/21", // two timelines
+      "https://adsterra.com/direct-link/22", // harem king
+      "https://adsterra.com/direct-link/23", // stealth
+      "https://adsterra.com/direct-link/24", // story-rich avn
+      "https://adsterra.com/direct-link/25", // detective
+      "https://adsterra.com/direct-link/26", // gay vn
+      "https://adsterra.com/direct-link/27", // dark romance
+      "https://adsterra.com/direct-link/28", // dungeon
+      "https://adsterra.com/direct-link/29", // farming
+      "https://adsterra.com/direct-link/30", // evermore
+      "https://adsterra.com/direct-link/31", // adult mystery
+      "https://adsterra.com/direct-link/32"  // unreal rpg
+    ];
 
-var smartlink = "https://www.effectivegatecpm.com/kk8ez1tvr?key=9a5c74a1f25a341b022d34997583d717";
+    // ensure we have at least as many links as games
+    while (downloadLinks.length < games.length) {
+      downloadLinks.push("https://adsterra.com/direct-link/default");
+    }
 
+    const grid = document.getElementById('gameGrid');
+    if (!grid) return;
 
-setTimeout(function(){
+    // clear and build cards
+    grid.innerHTML = '';
 
-top.location.href = smartlink;
+    games.forEach((game, index) => {
+      const card = document.createElement('div');
+      card.className = 'game-card';
 
-},8000);
+      // thumbnail
+      const thumb = document.createElement('div');
+      thumb.className = 'card-thumb';
+      thumb.innerHTML = `
+        <i class="fas fa-cube"></i>
+        <span class="play-badge"><i class="fas fa-play"></i> play</span>
+      `;
+      card.appendChild(thumb);
 
+      // body
+      const body = document.createElement('div');
+      body.className = 'card-body';
 
+      const title = document.createElement('div');
+      title.className = 'card-title';
+      title.textContent = game.title;
+      body.appendChild(title);
+
+      const genre = document.createElement('div');
+      genre.className = 'card-genre';
+      // show first two tags as genre chips
+      const tags = game.tags.slice(0, 2);
+      genre.innerHTML = tags.map(t => `<span>${t}</span>`).join('');
+      // add main genre
+      genre.innerHTML += ` <span style="background:#e2dcd4;">${game.genre}</span>`;
+      body.appendChild(genre);
+
+      // footer with download button
+      const footer = document.createElement('div');
+      footer.className = 'card-footer';
+
+      // download button (Adsterra direct link)
+      const downloadBtn = document.createElement('a');
+      downloadBtn.className = 'download-btn';
+      downloadBtn.href = downloadLinks[index] || '#';
+      downloadBtn.target = '_blank';
+      downloadBtn.rel = 'noopener noreferrer';
+      downloadBtn.innerHTML = `<i class="fas fa-download"></i> Download`;
+      // optional: add data attribute for direct link
+      footer.appendChild(downloadBtn);
+
+      // price / fake
+      const price = document.createElement('span');
+      price.className = 'price';
+      price.textContent = 'Free';
+      footer.appendChild(price);
+
+      body.appendChild(footer);
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+
+    // (optional) log hint to replace links
+    console.log('🔗 Replace the downloadLinks array with your Adsterra direct links.');
+  })();
 </script>
 
-
-
+<!-- you can replace the sample links directly in the downloadLinks array above -->
 </body>
 </html>
